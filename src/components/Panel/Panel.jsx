@@ -9,9 +9,6 @@ import {Input} from '../../components';
 
 
 const Panel = ({dots, addDotTC, reOrderTC, removeDotTC}) => {
-  /*  useEffect(() => {
-        localStorage.setItem('dots', JSON.stringify(dots))
-    }, [dots]);*/
 
     const [value, setValue] = useState('');
     const [LatLng, setLatLng] = useState(null);
