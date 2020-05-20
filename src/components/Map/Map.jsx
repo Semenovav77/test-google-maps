@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Map, GoogleApiWrapper, Polyline, Marker, InfoWindow} from 'google-maps-react';
 import {connect} from "react-redux";
 
@@ -6,6 +6,50 @@ import {changeCoordsFromMapTC} from '../../redux/mainReducer'
 
 
 const Maps = ({google, directions, dots, changeCoordsFromMapTC}) => {
+
+    const [currentLocation, setCurrentLocation] = useState({
+        coordin: {
+            lat: 55.755826,
+            lng: 37.6172999
+        },
+        isShown: false
+    });
+
+    const getLocation = () => {
+        if (navigator && navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                    const coords = position.coords;
+
+                    setCurrentLocation({
+                            coordin: {
+                                lat: coords.latitude,
+                                lng: coords.longitude
+                            },
+                            isShown: true
+                        },
+                    );
+                },
+                (positionError) => {
+                    alert(positionError.message);
+                    setCurrentLocation({
+                            coordin: {
+                                lat: 55.755826,
+                                lng: 37.6172999
+                            },
+                            isShown: true
+                        },
+                    );
+                    console.log()
+                    debugger
+                }
+            );
+        }
+    };
+
+    useEffect(() => {
+        getLocation();
+
+    }, []);
 
     const [showingInfoWindow, setShowingInfoWindow] = useState(null);
     const [activeMarker, setActiveMarker] = useState(null);
@@ -19,55 +63,23 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC}) => {
     };
 
     const onMarkerClick = (props, marker, e) => {
-        debugger
-        console.log('yoyoyo')
         setSelectedPlace(props);
         setActiveMarker(marker);
         setShowingInfoWindow(true)
+        debugger
     };
-
-    /* const getLocation = () => {
-         if (navigator && navigator.geolocation) {
-             navigator.geolocation.getCurrentPosition(pos => {
-                 const coords = pos.coords;
-
-                 let newState = Object.assign({}, this.state);
-                 newState.markers[0].position.lat = coords.latitude;
-                 newState.markers[0].position.lng = coords.longitude;
-
-                 this.setState(newState);
-                 console.log("map", this.state.markers[0].position.lat, this.state.markers[0].position.lng)
-             });
-         }
-     }*/
-
-    /*    componentDidMount() {
-            this.getLocation()
-        }*/
-
-    const handleSubmit = async e => {
-        e.preventDefault();
-
-        const location = {
-            latitude: this.state.markers[0].position.lat,
-            longitude: this.state.markers[0].position.lng
-        }
-
-    }
 
     return (
         <div>
-            <Map
+            {console.log(currentLocation)}
+            {(currentLocation.isShown) && <Map
                 google={google}
                 style={{
                     width: "500px",
                     height: "500px"
                 }}
                 zoom={7}
-                /*
-                                initialCenter={{lat: this.state.markers[0].position.lat, lng: this.state.markers[0].position.lng}}
-                */
-                initialCenter={{lat: 56.6402225, lng: 47.883858}}
+                initialCenter={currentLocation.coordin}
             >
                 {dots.map((marker, index) => (
                     <Marker
@@ -84,8 +96,8 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC}) => {
                             visible={showingInfoWindow}>
                     <div>
                         <h4>{selectedPlace.name}</h4>
-                        <p>lat: {(selectedPlace.mapCenter)&&selectedPlace.mapCenter.lat}</p>
-                        <p>lng: {(selectedPlace.mapCenter)&&selectedPlace.mapCenter.lng}</p>
+                        <p>lat: {(selectedPlace.mapCenter) && selectedPlace.mapCenter.lat}</p>
+                        <p>lng: {(selectedPlace.mapCenter) && selectedPlace.mapCenter.lng}</p>
                     </div>
                 </InfoWindow>
                 <Polyline
@@ -93,10 +105,7 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC}) => {
                     strokeColor="#0000FF"
                     strokeOpacity={0.8}
                     strokeWeight={2}/>
-            </Map>
-            {/*
-            <button type="submit" onClick={handleSubmit}>submit</button>
-*/}
+            </Map>}
         </div>
     );
 
