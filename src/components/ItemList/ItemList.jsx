@@ -1,11 +1,9 @@
 import React from 'react';
 import {Draggable} from "react-beautiful-dnd";
 
-import {removeDot} from '../../reducer/reducer'
-
-const ItemList = ({dot: {address}, id, dispatch}) => {
+const ItemList = ({dot: {address}, id, removeDot}) => {
     const onRemoveDot = () => {
-        dispatch(removeDot(id));
+        removeDot(id);
     };
     return (
         <>

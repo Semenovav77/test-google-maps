@@ -1,38 +1,34 @@
-import React from 'react';
-
 const CHANGE_DRAGGABLE_MAP_DOT = 'main/CHANGE_DRAGGABLE_MAP_DOT';
 const UPDATE_DIRECTIONS = 'main/UPDATE_DIRECTIONS';
 const ADD_DOT = 'main/ADD_DOT';
 const REMOVE_DOT = 'main/REMOVE_DOT';
 const REORDER_LIST = 'main/REORDER_LIST';
 const INITIALIZE_APP = 'main/INITIALIZE_APP';
-const TOOGLE_INITIALIZE_APP = 'main/TOOGLE_INITIALIZE_APP';
-
-export const ContextAPP = React.createContext();
 
 export const initialState = {
     dots: [
-          /*{
-              address: 'Йошкар-Ола',
-              coordinates: {lat: 56.6402225, lng: 47.883858}
-          },
-          {
-              address: 'Волжск',
-              coordinates: {lat: 55.8722768, lng: 48.356852}
-          },
-          {
-              address: 'Козьмодемьянск',
-              coordinates: {lat: 56.3294182, lng: 46.5530163}
-          }*/
+        /*{
+            address: 'Йошкар-Ола',
+            coordinates: {lat: 56.6402225, lng: 47.883858}
+        },
+        {
+            address: 'Волжск',
+            coordinates: {lat: 55.8722768, lng: 48.356852}
+        },
+        {
+            address: 'Козьмодемьянск',
+            coordinates: {lat: 56.3294182, lng: 46.5530163}
+        }*/
     ],
     directions: [
-/*                [{lat: 56.6402225, lng: 47.883858}, {lat: 55.8722768, lng: 48.356852}],
-                [{lat: 55.8722768, lng: 48.356852}, {lat: 56.3294182, lng: 46.5530163}]*/
+      /*  {lat: 56.6402225, lng: 47.883858},
+        {lat: 55.8722768, lng: 48.356852},
+        {lat: 56.3294182, lng: 46.5530163}*/
     ],
     initialize: false
 };
 
-export const reducer = (state, action) => {
+const mainReducer = (state = initialState, action) => {
     switch (action.type) {
         case CHANGE_DRAGGABLE_MAP_DOT:
             return {
@@ -52,8 +48,8 @@ export const reducer = (state, action) => {
             };
         case UPDATE_DIRECTIONS:
             const newDir = [];
-            for (let i = 0; i < state.dots.length - 1; i++) {
-                newDir[i] = [state.dots[i].coordinates, state.dots[i + 1].coordinates]
+            for (let i = 0; i < state.dots.length; i++) {
+                newDir[i] = state.dots[i].coordinates
             }
             return {
                 ...state,
@@ -93,6 +89,8 @@ export const reducer = (state, action) => {
     }
 };
 
+export default mainReducer;
+
 export const changeCoordsFromMap = (lat, lng, id) => {
     return {
         type: CHANGE_DRAGGABLE_MAP_DOT,
@@ -131,6 +129,56 @@ export const initializedApp = (dots) => {
     return {
         type: INITIALIZE_APP,
         payload: dots
+    }
+};
+
+export const addDotTC = (lat, lng, address) => {
+    return (dispatch) => {
+        let promise = dispatch(addDot(lat, lng, address));
+        Promise.all([promise])
+            .then(() => {
+                dispatch(updateDirections());
+            });
+    }
+};
+
+export const changeCoordsFromMapTC = (lat, lng, id) => {
+    return (dispatch) => {
+        let promise = dispatch(changeCoordsFromMap(lat, lng, id));
+        Promise.all([promise])
+            .then(() => {
+                dispatch(updateDirections());
+            });
+    }
+};
+
+export const removeDotTC = (id) => {
+    return (dispatch) => {
+        let promise = dispatch(removeDot(id));
+        Promise.all([promise])
+            .then(() => {
+                dispatch(updateDirections());
+            });
+    }
+};
+export const reOrderTC = (destination, source) => {
+    return (dispatch) => {
+        let promise = dispatch(reOrder(destination, source));
+        Promise.all([promise])
+            .then(() => {
+                dispatch(updateDirections());
+            });
+    }
+};
+
+export const initializedAppTC = (dots) => {
+    debugger
+    return (dispatch) => {
+        let promise = dispatch(initializedApp(dots));
+        Promise.all([promise])
+            .then(() => {
+                dispatch(updateDirections());
+            });
     }
 };
 

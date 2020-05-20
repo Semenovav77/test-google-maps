@@ -1,45 +1,19 @@
-import React, {useState} from 'react';
-import {InfoWindow, Marker} from "react-google-maps";
+import React from 'react';
+import {connect} from 'react-redux';
 
-import {changeCoordsFromMap} from '../../reducer/reducer'
+import {MarkerItem} from "../../components";
+import {changeCoordsFromMapTC} from "../../redux/mainReducer";
 
-const Markers = ({dot: {address, coordinates}, dispatch, id}) => {
-    const [showInfoWindow, setShowInfoWindow] = useState(false);
-    const handleMouseOver = () => {
-        setShowInfoWindow(true)
-    };
-    const handleMouseExit = () => {
-        setShowInfoWindow(false)
-    };
-    const onMarkerDragEnd = (coord, index) => {
-        const { latLng } = coord;
-        console.log(coord)
-        const lat = latLng.lat();
-        const lng = latLng.lng();
-        dispatch(changeCoordsFromMap(lat, lng, id));
-
-    };
-
+const Markers = ({dots, changeCoordsFromMapTC}) => {
     return (
         <div>
-            <Marker
-                position={coordinates}
-                onClick={handleMouseOver}
-                draggable={true}
-                onDragEnd={onMarkerDragEnd}
-            >
-                {showInfoWindow && (
-                    <InfoWindow onCloseClick={handleMouseExit}>
-                        <>
-                            <h4>{address}</h4>
-                            <p>lat: {coordinates.lat} </p>
-                            <p>lng: {coordinates.lng} </p>
-                        </>
-                    </InfoWindow>
-                )}
-            </Marker>
+            {(dots) && dots.map((item, index) => <MarkerItem key={index} dot={item} id={index} changeCoordsFromMapTC={changeCoordsFromMapTC}/>)}
         </div>
     );
 };
 
-export default Markers;
+const mapStateToProps = (state) => ({
+    dots: state.mainPage.dots
+});
+
+export default connect(mapStateToProps, {changeCoordsFromMapTC})(Markers);

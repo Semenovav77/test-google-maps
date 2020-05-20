@@ -1,20 +1,20 @@
-import React from 'react';
-import {GoogleMap, Polyline} from "react-google-maps";
+import React, {useContext} from 'react';
+import {Line} from "../index";
+import {changeCoordsFromMap, ContextAPP} from "../../redux/mainReducer";
+import {connect} from "react-redux";
 
-const Lines = ({line}) => {
+const Lines = ({directions}) => {
+  /*  const {state,dispatch} = useContext(ContextAPP);
+    const {dots, directions} = state;*/
     return (
         <div>
-            <Polyline
-                path={line}
-                geodesic={true}
-                options={{
-                    strokeColor: "blue",
-                    strokeOpacity: 0.75,
-                    strokeWeight: 2
-                }}
-            />
+            {(directions) && directions.map((item, index) => <Line key={index} line={item}/>)}
         </div>
     );
 };
 
-export default Lines;
+const mapStateToProps = (state) => ({
+    directions: state.mainPage.directions
+});
+
+export default connect(mapStateToProps, {changeCoordsFromMap})(Lines);

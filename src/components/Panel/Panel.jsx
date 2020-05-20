@@ -1,13 +1,17 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {DragDropContext, Droppable} from "react-beautiful-dnd";
+import {connect} from "react-redux";
 
-import {addDot} from "../../reducer/reducer";
+import {addDotTC, removeDotTC, reOrderTC} from "../../redux/mainReducer";
 import {ItemList} from '../../components';
 import {Button} from '../../components';
 import {Input} from '../../components';
-import {reOrder} from "../../reducer/reducer";
 
-const Panel = ({dots, dispatch}) => {
+
+const Panel = ({dots, addDotTC, reOrderTC, removeDotTC}) => {
+  /*  useEffect(() => {
+        localStorage.setItem('dots', JSON.stringify(dots))
+    }, [dots]);*/
 
     const [value, setValue] = useState('');
     const [LatLng, setLatLng] = useState(null);
@@ -17,7 +21,7 @@ const Panel = ({dots, dispatch}) => {
     };
 
     const addHandleDot = () => {
-        (value) && dispatch(addDot(LatLng.lat, LatLng.lng, value));
+        (value) && addDotTC(LatLng.lat, LatLng.lng, value);
         setValue('');
     };
 
@@ -27,7 +31,7 @@ const Panel = ({dots, dispatch}) => {
         console.log(source);
         console.log(draggableId);
         if (!destination) return;
-        dispatch(reOrder(destination.index, source.index));
+        reOrderTC(destination.index, source.index);
     }, []);
 
     return (
@@ -39,7 +43,7 @@ const Panel = ({dots, dispatch}) => {
                     {(provided, snapshot) => (
                         <div className='panel' ref={provided.innerRef} {...provided.droppableProps}>
                             <div>
-                                {dots.map((item, index) => <ItemList key={index} dot={item} id={index} dispatch={dispatch}/>
+                                {dots.map((item, index) => <ItemList key={index} dot={item} id={index} removeDot={removeDotTC}/>
                                 )}
                             </div>
                         </div>
@@ -50,4 +54,8 @@ const Panel = ({dots, dispatch}) => {
     );
 };
 
-export default Panel;
+const mapStateToProps = (state) => ({
+    dots: state.mainPage.dots
+});
+
+export default connect(mapStateToProps, {addDotTC, reOrderTC, removeDotTC})(Panel);
