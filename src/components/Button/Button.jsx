@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './../Panel/Panel.scss'
+
 const Button = ({addHandleDot}) => {
     return (
         <div>

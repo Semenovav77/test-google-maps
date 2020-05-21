@@ -1,0 +1,24 @@
+.item {
+  display: flex;
+  width: 456px;
+  min-height: 38px;
+  align-items: center;
+  background: #F0F0F0;
+  border-radius: 8px;
+  margin-top: 15px;
+  &__left {
+    margin-left: 12px;
+  };
+  &__center {
+    flex: 1;
+    margin-left: 21px;
+    font-size: 14px;
+    line-height: 22px;
+    color: #595959;
+    padding: 8px 0;
+  };
+  &__right {
+    margin-right: 15px;
+    cursor: pointer;
+  };
+};

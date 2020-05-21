@@ -1,19 +1,21 @@
 import React from 'react';
 
-import './App.css';
+import './App.scss';
 
-import {Panel} from './components';
-import {connect} from "react-redux";
-import {initializedAppTC} from "./redux/mainReducer";
-import GoogleApiWrapper from "./components/Map/Map";
+import {PanelContainer} from './containers';
+import {GoogleApiWrapper} from './containers';
 
 const App = () => {
     return (
-        <>
-            <Panel/>
-            <GoogleApiWrapper/>
-        </>
+        <div className='container'>
+            <div>
+                <PanelContainer/>
+            </div>
+            <div>
+                <GoogleApiWrapper/>
+            </div>
+        </div>
     );
 };
 
-export default connect(null, {initializedAppTC})(App);
+export default App;

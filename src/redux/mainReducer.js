@@ -3,7 +3,9 @@ const UPDATE_DIRECTIONS = 'main/UPDATE_DIRECTIONS';
 const ADD_DOT = 'main/ADD_DOT';
 const REMOVE_DOT = 'main/REMOVE_DOT';
 const REORDER_LIST = 'main/REORDER_LIST';
-const INITIALIZE_APP = 'main/INITIALIZE_APP';
+const SET_CENTER = 'main/SET_CENTER';
+const ADD_DIRECTION = 'main/ADD_DIRECTION';
+const REMOVE_DIRECTION = 'main/REMOVE_DIRECTION';
 
 export const initialState = {
     dots: [
@@ -21,11 +23,11 @@ export const initialState = {
         }*/
     ],
     directions: [
-      /*  {lat: 56.6402225, lng: 47.883858},
-        {lat: 55.8722768, lng: 48.356852},
-        {lat: 56.3294182, lng: 46.5530163}*/
+        /*  {lat: 56.6402225, lng: 47.883858},
+          {lat: 55.8722768, lng: 48.356852},
+          {lat: 56.3294182, lng: 46.5530163}*/
     ],
-    initialize: false
+    center: {lat: 0, lng: 0}
 };
 
 const mainReducer = (state = initialState, action) => {
@@ -79,10 +81,27 @@ const mainReducer = (state = initialState, action) => {
                 ...state,
                 dots: newDots
             };
-        case INITIALIZE_APP:
+        case SET_CENTER:
             return {
                 ...state,
-                dots: action.payload
+                center: {
+                    lat: action.payload.lat,
+                    lng: action.payload.lng
+                }
+            };
+        case ADD_DIRECTION:
+            return {
+                ...state,
+                directions: [...state.directions,
+                    {
+                        lat: action.payload.lat,
+                        lng: action.payload.lng
+                    }]
+            };
+        case REMOVE_DIRECTION:
+            return {
+                ...state,
+                directions: state.directions.filter((el, index) => action.payload !== index)
             };
         default:
             return state
@@ -111,10 +130,24 @@ export const addDot = (lat, lng, address) => {
     }
 };
 
+export const addDirection = (lat, lng) => {
+    return {
+        type: ADD_DIRECTION,
+        payload: {lat, lng}
+    }
+};
+
 export const removeDot = (id) => {
     return {
         type: REMOVE_DOT,
         payload: {id}
+    }
+};
+
+export const removeDirection = (id) => {
+    return {
+        type: REMOVE_DIRECTION,
+        payload: id
     }
 };
 
@@ -125,20 +158,22 @@ export const reOrder = (destination, source) => {
     }
 };
 
-export const initializedApp = (dots) => {
+export const setCenter = (lat, lng) => {
     return {
-        type: INITIALIZE_APP,
-        payload: dots
+        type: SET_CENTER,
+        payload: {lat, lng}
     }
 };
 
 export const addDotTC = (lat, lng, address) => {
     return (dispatch) => {
         let promise = dispatch(addDot(lat, lng, address));
-        Promise.all([promise])
+        dispatch(addDirection(lat, lng));
+    /*    Promise.all([promise])
             .then(() => {
-                dispatch(updateDirections());
-            });
+                /!*dispatch(updateDirections());*!/
+                dispatch(addDirection(lat, lng));
+            });*/
     }
 };
 
@@ -155,10 +190,11 @@ export const changeCoordsFromMapTC = (lat, lng, id) => {
 export const removeDotTC = (id) => {
     return (dispatch) => {
         let promise = dispatch(removeDot(id));
-        Promise.all([promise])
+        dispatch(removeDirection(id));
+       /* Promise.all([promise])
             .then(() => {
                 dispatch(updateDirections());
-            });
+            });*/
     }
 };
 export const reOrderTC = (destination, source) => {
@@ -171,14 +207,4 @@ export const reOrderTC = (destination, source) => {
     }
 };
 
-export const initializedAppTC = (dots) => {
-    debugger
-    return (dispatch) => {
-        let promise = dispatch(initializedApp(dots));
-        Promise.all([promise])
-            .then(() => {
-                dispatch(updateDirections());
-            });
-    }
-};
 

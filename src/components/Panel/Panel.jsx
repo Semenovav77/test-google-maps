@@ -1,44 +1,49 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {DragDropContext, Droppable} from "react-beautiful-dnd";
-import {connect} from "react-redux";
 
-import {addDotTC, removeDotTC, reOrderTC} from "../../redux/mainReducer";
 import {ItemList} from '../../components';
 import {Button} from '../../components';
 import {Input} from '../../components';
+import './Panel.scss'
 
 
-const Panel = ({dots, addDotTC, reOrderTC, removeDotTC}) => {
+const Panel = ({dots, center,  addDotTC, reOrderTC, removeDotTC}) => {
 
     const [value, setValue] = useState('');
-    const [LatLng, setLatLng] = useState(null);
 
-    const handleChange = (address) => {
-        setValue(address);
+    const handleChange = (e) => {
+        setValue(e.target.value);
+    };
+   const handleKeyPress = (e) => {
+       debugger
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            (value) && addDotTC(center.lat, center.lng, value);
+            setValue('');
+        }
     };
 
     const addHandleDot = () => {
-        (value) && addDotTC(LatLng.lat, LatLng.lng, value);
+        (value) && addDotTC(center.lat, center.lng, value);
         setValue('');
     };
 
     const onDragEnd = useCallback((result) => {
         const {destination, source, draggableId} = result;
-        console.log(destination);
-        console.log(source);
-        console.log(draggableId);
         if (!destination) return;
         reOrderTC(destination.index, source.index);
     }, []);
 
     return (
-        <>
-            <Input value={value} handleChange={handleChange} setValue={setValue} setLatLng={setLatLng}/>
+        <div className='panel'>
+            <div className='panel__input'>
+            <Input value={value} handleChange={handleChange} handleKeyPress={handleKeyPress}/>
             <Button addHandleDot={addHandleDot}/>
+            </div>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId={`panel`} type="PERSON">
                     {(provided, snapshot) => (
-                        <div className='panel' ref={provided.innerRef} {...provided.droppableProps}>
+                        <div className='panel__dots' ref={provided.innerRef} {...provided.droppableProps}>
                             <div>
                                 {dots.map((item, index) => <ItemList key={index} dot={item} id={index} removeDot={removeDotTC}/>
                                 )}
@@ -47,12 +52,8 @@ const Panel = ({dots, addDotTC, reOrderTC, removeDotTC}) => {
                     )}
                 </Droppable>
             </DragDropContext>
-        </>
+        </div>
     );
 };
 
-const mapStateToProps = (state) => ({
-    dots: state.mainPage.dots
-});
-
-export default connect(mapStateToProps, {addDotTC, reOrderTC, removeDotTC})(Panel);
+export default Panel;
