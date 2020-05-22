@@ -11,5 +11,5 @@ const mapStateToProps = (state) => ({
 const MapContainer = connect(mapStateToProps, {changeCoordsFromMapTC, setCenter})(Maps);
 
 export default GoogleApiWrapper({
-    apiKey: 'AIzaSyAtYEQcK_penjrSlD3ZRIwfsMbGhvPEOY8'
+    apiKey: process.env.REACT_APP_GOOGLE_API_TOKEN
 })(MapContainer);

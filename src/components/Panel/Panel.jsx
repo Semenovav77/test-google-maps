@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback} from 'react';
 import {DragDropContext, Droppable} from "react-beautiful-dnd";
 
 import {ItemList} from '../../components';
@@ -6,6 +6,9 @@ import {Button} from '../../components';
 import {Input} from '../../components';
 import './Panel.scss'
 
+const getListStyle = isDraggingOver => ({
+ /*   background: isDraggingOver ? '#ededed' : ''*/
+})
 
 const Panel = ({dots, center,  addDotTC, reOrderTC, removeDotTC}) => {
 
@@ -15,7 +18,6 @@ const Panel = ({dots, center,  addDotTC, reOrderTC, removeDotTC}) => {
         setValue(e.target.value);
     };
    const handleKeyPress = (e) => {
-       debugger
         if (e.key === 'Enter') {
             e.preventDefault();
             (value) && addDotTC(center.lat, center.lng, value);
@@ -43,7 +45,8 @@ const Panel = ({dots, center,  addDotTC, reOrderTC, removeDotTC}) => {
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId={`panel`} type="PERSON">
                     {(provided, snapshot) => (
-                        <div className='panel__dots' ref={provided.innerRef} {...provided.droppableProps}>
+                        <div className='panel__dots' ref={provided.innerRef} {...provided.droppableProps}
+                             style={getListStyle(snapshot.isDraggingOver)}>
                             <div>
                                 {dots.map((item, index) => <ItemList key={index} dot={item} id={index} removeDot={removeDotTC}/>
                                 )}

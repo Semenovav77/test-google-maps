@@ -1,4 +1,9 @@
 .map {
   width: 456px;
   height: 488px;
+  padding: 0 12px;
+  .head {
+    color: blue;
+    font-weight: bolder;
+  }
 }

@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {Map, GoogleApiWrapper, Polyline, Marker, InfoWindow} from 'google-maps-react';
-import {connect} from "react-redux";
+import {Map, Polyline, Marker, InfoWindow} from 'google-maps-react';
 
-import {changeCoordsFromMapTC, setCenter} from '../../redux/mainReducer'
 import './Map.scss'
 
 
@@ -30,7 +28,7 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
                             isShown: true
                         },
                     );
-                    setCenter( coords.latitude, coords.longitude)
+                    setCenter(coords.latitude, coords.longitude)
                 },
                 (positionError) => {
                     alert(positionError.message);
@@ -40,7 +38,6 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
                         },
                     );
                     setCenter(coords.lat, coords.lng);
-                    debugger
                 }
             );
         }
@@ -65,11 +62,9 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
         setSelectedPlace(props);
         setActiveMarker(marker);
         setShowingInfoWindow(true);
-        console.log(selectedPlace);
-        debugger
     };
 
-   const onMapClick = (props) => {
+    const onMapClick = (props) => {
         if (showingInfoWindow) {
             setShowingInfoWindow(false);
             setActiveMarker(null);
@@ -87,14 +82,15 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
             {(currentLocation.isShown) &&
             <Map
                 google={google}
-                style={{
+                containerStyle={{
+                    position: "relative",
                     width: "456px",
-                    height: "488px"
+                    height: "488px",
                 }}
                 zoom={7}
                 initialCenter={currentLocation.coordin}
                 onDragend={centerMoved}
-                onClick = {onMapClick}
+                onClick={onMapClick}
             >
                 {dots.map((marker, index) => (
                     <Marker
@@ -106,13 +102,12 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
                         onClick={onMarkerClick}
                         animation={google.maps.Animation.DROP}
                     />
-
                 ))}
                 {(selectedPlace) && <InfoWindow marker={activeMarker}
-                                              visible={showingInfoWindow}
+                                                visible={showingInfoWindow}
                                                 onClose={onMapClick}>
                     <div>
-                        <h4>{(selectedPlace.name) && selectedPlace.name}</h4>
+                        <p className='head'>{(selectedPlace.name) && selectedPlace.name}</p>
                         <p>lat: {(selectedPlace.position) && selectedPlace.position.lat}</p>
                         <p>lng: {(selectedPlace.position) && selectedPlace.position.lng}</p>
                     </div>

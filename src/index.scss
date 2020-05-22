@@ -1,4 +1,5 @@
 @import '~reset-css';
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700&subset=cyrillic');
 
 body,
 html,
@@ -6,10 +7,9 @@ html,
   width: 100%;
   height: 100%;
   color: rgba(0, 0, 0, 1);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family: 'Roboto', sans-serif;
   font-variant: tabular-nums;
   font-size: 14px;
-  font-family: Roboto;
   font-style: normal;
   font-weight: normal;
 }
