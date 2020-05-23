@@ -191,6 +191,7 @@ export const removeDotTC = (id) => {
     }
 };
 export const reOrderTC = (destination, source) => {
+    debugger
     return (dispatch) => {
         let promise = dispatch(reOrder(destination, source));
         Promise.all([promise])

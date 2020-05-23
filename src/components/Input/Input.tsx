@@ -2,7 +2,13 @@ import React from 'react';
 
 import './../Panel/Panel.scss';
 
-const Input = ({value, handleChange, handleKeyPress}) => {
+type Props = {
+    value?: string,
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    handleKeyPress: (e:React.KeyboardEvent<HTMLInputElement>) => void
+}
+
+const Input: React.FC<Props> = ({value, handleChange, handleKeyPress}) => {
 
     return (
         <div>

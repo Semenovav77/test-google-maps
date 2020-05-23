@@ -2,7 +2,11 @@ import React from 'react';
 
 import './../Panel/Panel.scss'
 
-const Button = ({addHandleDot}) => {
+type Props= {
+    addHandleDot: () => void
+}
+
+const Button: React.FC<Props> = ({addHandleDot}) => {
     return (
         <div>
             <button onClick={addHandleDot}> Add point </button>

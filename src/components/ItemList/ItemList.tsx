@@ -3,8 +3,15 @@ import {Draggable} from 'react-beautiful-dnd';
 
 import group from './../../assets/group.svg';
 import './ItemList.scss';
+import {DotType} from "../../types/types";
 
-const ItemList = ({dot, index, onRemoveDot}) => {
+type Props = {
+    dot: DotType,
+    index: number,
+    onRemoveDot: (index: number, dot: DotType) => void
+}
+
+const ItemList: React.FC<Props> = ({dot, index, onRemoveDot}) => {
     return (
         <>
             <Draggable draggableId={`${index}`} index={index}>
