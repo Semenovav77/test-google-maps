@@ -21,22 +21,25 @@ import './ItemList.scss';
     // opt out of pointer-events: none for dragging items
     ...(isDragging && { pointerEvents: 'auto' })
 });*/
+/*
+let timerDel = [];
+*/
 
-const ItemList = ({dot, index, removeDotTC}) => {
-    let timer;
-    useEffect(() => {
-        return () => clearTimeout(timer)
+const ItemList = ({dot, index, onRemoveDot}) => {
+
+   /* useEffect(() => {
+       /!* return () => timerDel.forEach((item) => clearTimeout(item));*!/
     }, []);
 
     const onRemoveDot = () => {
-        timer = setTimeout(() => {
-            const ind = window.renderedMarkers.findIndex(n => n === dot.id);
+        let timerItem = setTimeout(() => {
             if (window.renderedMarkers.findIndex(n => n === dot.id) !== -1) {
                 window.renderedMarkers.splice(index, 1);
             }
         },10000);
+        timerDel = [...timerDel, timerItem];
         removeDotTC(index);
-    };
+    };*/
 
     return (
         <>
@@ -57,7 +60,7 @@ const ItemList = ({dot, index, removeDotTC}) => {
                         <div className='item__center'>
                             {dot.address}
                         </div>
-                        <div className='item__right' onClick={onRemoveDot}>
+                        <div className='item__right' onClick={() => onRemoveDot(index, dot)}>
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path

@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {DragDropContext, Droppable} from "react-beautiful-dnd";
 
 import {ItemList} from '../../components';
@@ -9,6 +9,7 @@ import './Panel.scss'
 const getListStyle = isDraggingOver => ({
     /*   background: isDraggingOver ? '#ededed' : ''*/
 })
+let timerDel = [];
 
 const Panel = ({dots, center, addDotTC, reOrderTC, removeDotTC}) => {
 
@@ -23,6 +24,20 @@ const Panel = ({dots, center, addDotTC, reOrderTC, removeDotTC}) => {
             (value) && addDotTC(center.lat, center.lng, value);
             setValue('');
         }
+    };
+
+    useEffect(() => {
+        /* return () => timerDel.forEach((item) => clearTimeout(item));*/
+    }, []);
+
+    const onRemoveDot = (index, dot) => {
+        let timerItem = setTimeout(() => {
+            if (window.renderedMarkers.findIndex(n => n === dot.id) !== -1) {
+                window.renderedMarkers.splice(index, 1);
+            }
+        },10000);
+        timerDel = [...timerDel, timerItem];
+        removeDotTC(index);
     };
 
     const addHandleDot = () => {
@@ -49,7 +64,7 @@ const Panel = ({dots, center, addDotTC, reOrderTC, removeDotTC}) => {
                              style={getListStyle(snapshot.isDraggingOver)}>
                             <div>
                                 {dots.map((item, index) => <ItemList key={index} dot={item} index={index}
-                                                                     removeDotTC={removeDotTC}/>
+                                                                     onRemoveDot={onRemoveDot}/>
                                 )}
                             </div>
                         </div>

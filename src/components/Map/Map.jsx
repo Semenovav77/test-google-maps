@@ -9,6 +9,7 @@ const coords = {
 };
 
 window.renderedMarkers = [];
+let timer = [];
 
 const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
 
@@ -44,9 +45,13 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
         }
     };
 
+
+
     useEffect(() => {
         getLocation();
-        return () => clearTimeout(timer)
+        return () => {
+            timer.forEach((item) => clearTimeout(item));
+        }
     }, []);
 
     const [showingInfoWindow, setShowingInfoWindow] = useState(false);
@@ -79,17 +84,19 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
         setCenter(lat, lng);
     };
 
-    let timer;
+
     const toogleRenderMarkers = () => {
-        timer = setTimeout(() => dots.map((dots, index) => {
+        let timerAdd = (dots) && setTimeout(() => dots.map((dots, index) => {
             if (window.renderedMarkers.indexOf(dots.id) == -1) {
                 window.renderedMarkers = [...window.renderedMarkers, dots.id]
             }
         }), 1000)
+        timer = [...timer, timerAdd]
+        debugger
     };
-   /* useEffect(() => {
-        return () => clearTimeout(timer)
-    }, [dots]);*/
+    /* useEffect(() => {
+         return () => clearTimeout(timer)
+     }, [dots]);*/
 
     return (
         <div className='map'>
