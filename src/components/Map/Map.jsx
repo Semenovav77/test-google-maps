@@ -3,11 +3,12 @@ import {Map, Polyline, Marker, InfoWindow} from 'google-maps-react';
 
 import './Map.scss'
 
-
 const coords = {
     lat: 55.755826,
     lng: 37.6172999
-}
+};
+
+window.renderedMarkers = [];
 
 const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
 
@@ -45,6 +46,7 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
 
     useEffect(() => {
         getLocation();
+        return () => clearTimeout(timer)
     }, []);
 
     const [showingInfoWindow, setShowingInfoWindow] = useState(false);
@@ -77,6 +79,18 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
         setCenter(lat, lng);
     };
 
+    let timer;
+    const toogleRenderMarkers = () => {
+        timer = setTimeout(() => dots.map((dots, index) => {
+            if (window.renderedMarkers.indexOf(dots.id) == -1) {
+                window.renderedMarkers = [...window.renderedMarkers, dots.id]
+            }
+        }), 1000)
+    };
+   /* useEffect(() => {
+        return () => clearTimeout(timer)
+    }, [dots]);*/
+
     return (
         <div className='map'>
             {(currentLocation.isShown) &&
@@ -100,7 +114,7 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
                         onDragend={(t, map, coord) => onMarkerDragEnd(coord, index)}
                         name={marker.address}
                         onClick={onMarkerClick}
-                        animation={google.maps.Animation.DROP}
+                        animation={(window.renderedMarkers.indexOf(marker.id) == -1) && google.maps.Animation.DROP}
                     />
                 ))}
                 {(selectedPlace) && <InfoWindow marker={activeMarker}
@@ -118,6 +132,7 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
                     strokeOpacity={0.8}
                     strokeWeight={2}/>
             </Map>}
+            {toogleRenderMarkers()}
         </div>
     );
 

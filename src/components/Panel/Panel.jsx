@@ -7,17 +7,17 @@ import {Input} from '../../components';
 import './Panel.scss'
 
 const getListStyle = isDraggingOver => ({
- /*   background: isDraggingOver ? '#ededed' : ''*/
+    /*   background: isDraggingOver ? '#ededed' : ''*/
 })
 
-const Panel = ({dots, center,  addDotTC, reOrderTC, removeDotTC}) => {
+const Panel = ({dots, center, addDotTC, reOrderTC, removeDotTC}) => {
 
     const [value, setValue] = useState('');
 
     const handleChange = (e) => {
         setValue(e.target.value);
     };
-   const handleKeyPress = (e) => {
+    const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
             (value) && addDotTC(center.lat, center.lng, value);
@@ -31,7 +31,7 @@ const Panel = ({dots, center,  addDotTC, reOrderTC, removeDotTC}) => {
     };
 
     const onDragEnd = useCallback((result) => {
-        const {destination, source, draggableId} = result;
+        const {destination, source} = result;
         if (!destination) return;
         reOrderTC(destination.index, source.index);
     }, []);
@@ -39,8 +39,8 @@ const Panel = ({dots, center,  addDotTC, reOrderTC, removeDotTC}) => {
     return (
         <div className='panel'>
             <div className='panel__input'>
-            <Input value={value} handleChange={handleChange} handleKeyPress={handleKeyPress}/>
-            <Button addHandleDot={addHandleDot}/>
+                <Input value={value} handleChange={handleChange} handleKeyPress={handleKeyPress}/>
+                <Button addHandleDot={addHandleDot}/>
             </div>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId={`panel`} type="PERSON">
@@ -48,7 +48,8 @@ const Panel = ({dots, center,  addDotTC, reOrderTC, removeDotTC}) => {
                         <div className='panel__dots' ref={provided.innerRef} {...provided.droppableProps}
                              style={getListStyle(snapshot.isDraggingOver)}>
                             <div>
-                                {dots.map((item, index) => <ItemList key={index} dot={item} id={index} removeDot={removeDotTC}/>
+                                {dots.map((item, index) => <ItemList key={index} dot={item} index={index}
+                                                                     removeDotTC={removeDotTC}/>
                                 )}
                             </div>
                         </div>

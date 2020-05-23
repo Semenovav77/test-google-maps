@@ -1,7 +1,6 @@
 import React from 'react';
 
 import './App.scss';
-
 import {PanelContainer} from './containers';
 import {GoogleApiWrapper} from './containers';
 
