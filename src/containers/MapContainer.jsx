@@ -12,4 +12,4 @@ const MapContainer = connect(mapStateToProps, {changeCoordsFromMapTC, setCenter}
 
 export default GoogleApiWrapper({
     apiKey: process.env.REACT_APP_GOOGLE_API_TOKEN
-})(MapContainer);
+})(MapContainer)

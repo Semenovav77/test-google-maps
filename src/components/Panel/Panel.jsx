@@ -27,7 +27,7 @@ const Panel = ({dots, center, addDotTC, reOrderTC, removeDotTC}) => {
     };
 
     useEffect(() => {
-        /* return () => timerDel.forEach((item) => clearTimeout(item));*/
+         return () => timerDel.forEach((item) => clearTimeout(item));
     }, []);
 
     const onRemoveDot = (index, dot) => {

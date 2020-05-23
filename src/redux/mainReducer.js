@@ -27,7 +27,7 @@ export const initialState = {
           {lat: 55.8722768, lng: 48.356852},
           {lat: 56.3294182, lng: 46.5530163}*/
     ],
-    center: {lat: 0, lng: 0}
+    center: {lat: 0, lng: 0},
 };
 
 const mainReducer = (state = initialState, action) => {
@@ -169,13 +169,8 @@ export const setCenter = (lat, lng) => {
 
 export const addDotTC = (lat, lng, address) => {
     return (dispatch) => {
-        let promise = dispatch(addDot(lat, lng, address));
+        dispatch(addDot(lat, lng, address));
         dispatch(addDirection(lat, lng));
-    /*    Promise.all([promise])
-            .then(() => {
-                /!*dispatch(updateDirections());*!/
-                dispatch(addDirection(lat, lng));
-            });*/
     }
 };
 
@@ -191,12 +186,8 @@ export const changeCoordsFromMapTC = (lat, lng, id) => {
 
 export const removeDotTC = (id) => {
     return (dispatch) => {
-        let promise = dispatch(removeDot(id));
+        dispatch(removeDot(id));
         dispatch(removeDirection(id));
-       /* Promise.all([promise])
-            .then(() => {
-                dispatch(updateDirections());
-            });*/
     }
 };
 export const reOrderTC = (destination, source) => {

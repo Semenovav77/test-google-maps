@@ -1,46 +1,10 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Draggable} from 'react-beautiful-dnd';
 
 import group from './../../assets/group.svg';
 import './ItemList.scss';
 
-
-/*const getItemStyle = (draggableStyle, isDragging) => ({
-    // some basic styles to make the items look a bit nicer
-    userSelect: 'none',
-     /!* padding: grid * 2,
-      margin: `0 0 ${grid}px 0`,*!/
-    cursor: isDragging ? '-webkit-grabbing' : '-webkit-grab',
-
-    // change background colour if dragging
-    background: isDragging ? 'lightgreen' : 'grey',
-
-    // styles we need to apply on draggables
-    ...draggableStyle,
-
-    // opt out of pointer-events: none for dragging items
-    ...(isDragging && { pointerEvents: 'auto' })
-});*/
-/*
-let timerDel = [];
-*/
-
 const ItemList = ({dot, index, onRemoveDot}) => {
-
-   /* useEffect(() => {
-       /!* return () => timerDel.forEach((item) => clearTimeout(item));*!/
-    }, []);
-
-    const onRemoveDot = () => {
-        let timerItem = setTimeout(() => {
-            if (window.renderedMarkers.findIndex(n => n === dot.id) !== -1) {
-                window.renderedMarkers.splice(index, 1);
-            }
-        },10000);
-        timerDel = [...timerDel, timerItem];
-        removeDotTC(index);
-    };*/
-
     return (
         <>
             <Draggable draggableId={`${index}`} index={index}>
@@ -49,10 +13,6 @@ const ItemList = ({dot, index, onRemoveDot}) => {
                          ref={provided.innerRef}
                          {...provided.draggableProps}
                          {...provided.dragHandleProps}
-                        /*style={getItemStyle(
-                            snapshot.isDragging,
-                            snapshot.draggableProps.style,
-                        )}*/
                     >
                         <div className='item__left'>
                             <img src={group} alt={`Svg group ${index}`}/>

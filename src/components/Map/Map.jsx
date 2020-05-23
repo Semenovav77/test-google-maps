@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {Map, Polyline, Marker, InfoWindow} from 'google-maps-react';
+import {Map, Polyline, InfoWindow} from 'google-maps-react';
 
-import './Map.scss'
+import './Map.scss';
+import {CustomMarkers} from '../../components'
 
 const coords = {
     lat: 55.755826,
@@ -46,7 +47,6 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
     };
 
 
-
     useEffect(() => {
         getLocation();
         return () => {
@@ -65,13 +65,13 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
         changeCoordsFromMapTC(lat, lng, id)
     };
 
-    const onMarkerClick = (props, marker, e) => {
+    const onMarkerClick = (props, marker) => {
         setSelectedPlace(props);
         setActiveMarker(marker);
         setShowingInfoWindow(true);
     };
 
-    const onMapClick = (props) => {
+    const onMapClick = () => {
         if (showingInfoWindow) {
             setShowingInfoWindow(false);
             setActiveMarker(null);
@@ -86,17 +86,13 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
 
 
     const toogleRenderMarkers = () => {
-        let timerAdd = (dots) && setTimeout(() => dots.map((dots, index) => {
+        let timerAdd = (dots) && setTimeout(() => dots.map((dots) => {
             if (window.renderedMarkers.indexOf(dots.id) == -1) {
                 window.renderedMarkers = [...window.renderedMarkers, dots.id]
             }
         }), 1000)
         timer = [...timer, timerAdd]
-        debugger
     };
-    /* useEffect(() => {
-         return () => clearTimeout(timer)
-     }, [dots]);*/
 
     return (
         <div className='map'>
@@ -113,17 +109,10 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
                 onDragend={centerMoved}
                 onClick={onMapClick}
             >
-                {dots.map((marker, index) => (
-                    <Marker
-                        key={index}
-                        position={marker.coordinates}
-                        draggable={true}
-                        onDragend={(t, map, coord) => onMarkerDragEnd(coord, index)}
-                        name={marker.address}
-                        onClick={onMarkerClick}
-                        animation={(window.renderedMarkers.indexOf(marker.id) == -1) && google.maps.Animation.DROP}
-                    />
-                ))}
+                <CustomMarkers dots={dots} google={google}
+                               onMarkerDragEnd={onMarkerDragEnd}
+                               onMarkerClick={onMarkerClick}/>
+
                 {(selectedPlace) && <InfoWindow marker={activeMarker}
                                                 visible={showingInfoWindow}
                                                 onClose={onMapClick}>
@@ -146,4 +135,5 @@ const Maps = ({google, directions, dots, changeCoordsFromMapTC, setCenter}) => {
 };
 
 export default Maps;
+
 
