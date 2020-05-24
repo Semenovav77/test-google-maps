@@ -6,11 +6,15 @@ const rootReducer = combineReducers( {
     mainPage: mainReducer
 });
 
+type RouteReducerType = typeof rootReducer;
+export type AppStateType = ReturnType<RouteReducerType>;
+
+
 /**
  * This function accepts the app state, and saves it to localStorage
  * @param state
  */
-const saveState = (state) => {
+const saveState = (state: AppStateType) => {
     try {
         //Convert the state to a JSON string
         const serialisedState = JSON.stringify(state);
@@ -55,6 +59,7 @@ const loadState =() => {
  */
 const oldState = loadState();
 
+// @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(rootReducer, oldState, composeEnhancers(applyMiddleware(thunkMiddleware)));
 
@@ -62,6 +67,7 @@ store.subscribe(() => {
     saveState(store.getState());
 });
 
+// @ts-ignore
 window.__store__ = store;
 
 export default store;

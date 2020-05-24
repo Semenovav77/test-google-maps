@@ -1,7 +1,8 @@
 import {connect} from "react-redux";
 import {addDotTC, removeDotTC, reOrderTC} from "../redux/mainReducer";
-import {Panel} from './../components'
+import {Panel} from '../components'
 import {DotType} from "../types/types";
+import {AppStateType} from "../redux/redux-store";
 
 type MapStatePropType = {
     dots: Array<DotType>,
@@ -19,10 +20,10 @@ type MapDispatchPropType = {
 
 type OwnPropType = {}
 
-const mapStateToProps = (state: any): MapStatePropType => ({
+const mapStateToProps = (state: AppStateType): MapStatePropType => ({
     dots: state.mainPage.dots,
     center: state.mainPage.center,
 });
 
-export default connect<MapStatePropType, MapDispatchPropType, OwnPropType, any>(mapStateToProps,
+export default connect<MapStatePropType, MapDispatchPropType, OwnPropType, AppStateType>(mapStateToProps,
     {addDotTC, reOrderTC, removeDotTC})(Panel);

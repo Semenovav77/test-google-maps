@@ -37,7 +37,6 @@ const ItemList: React.FC<Props> = ({dot, index, onRemoveDot}) => {
                         </div>
                     </div>
                 )}
-
             </Draggable>
         </>
     );

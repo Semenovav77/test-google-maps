@@ -1,3 +1,6 @@
+import {DirectionType, DotType} from "../types/types";
+import {ActionCreatorsMapObject, Dispatch} from "redux";
+
 const CHANGE_DRAGGABLE_MAP_DOT = 'main/CHANGE_DRAGGABLE_MAP_DOT';
 const UPDATE_DIRECTIONS = 'main/UPDATE_DIRECTIONS';
 const ADD_DOT = 'main/ADD_DOT';
@@ -7,30 +10,25 @@ const SET_CENTER = 'main/SET_CENTER';
 const ADD_DIRECTION = 'main/ADD_DIRECTION';
 const REMOVE_DIRECTION = 'main/REMOVE_DIRECTION';
 
-export const initialState = {
-    dots: [
-        /*{
-            address: 'Йошкар-Ола',
-            coordinates: {lat: 56.6402225, lng: 47.883858}
-        },
-        {
-            address: 'Волжск',
-            coordinates: {lat: 55.8722768, lng: 48.356852}
-        },
-        {
-            address: 'Козьмодемьянск',
-            coordinates: {lat: 56.3294182, lng: 46.5530163}
-        }*/
-    ],
-    directions: [
-        /*  {lat: 56.6402225, lng: 47.883858},
-          {lat: 55.8722768, lng: 48.356852},
-          {lat: 56.3294182, lng: 46.5530163}*/
-    ],
-    center: {lat: 0, lng: 0},
+type InitialStateType ={
+    dots: Array<DotType>,
+    directions: Array<DirectionType>,
+    center: {
+        lat: number,
+        lng: number
+    }
+}
+
+export const initialState: InitialStateType = {
+    dots: [],
+    directions: [],
+    center: {
+        lat: 0,
+        lng: 0
+    },
 };
 
-const mainReducer = (state = initialState, action) => {
+const mainReducer = (state = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
         case CHANGE_DRAGGABLE_MAP_DOT:
             return {
@@ -67,6 +65,7 @@ const mainReducer = (state = initialState, action) => {
                         lat: action.payload.lat,
                         lng: action.payload.lng
                     },
+                    //@ts-ignore
                     id: ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
                 }]
             };
@@ -112,70 +111,132 @@ const mainReducer = (state = initialState, action) => {
 
 export default mainReducer;
 
-export const changeCoordsFromMap = (lat, lng, id) => {
+type ActionsType = changeCoordsFromMapActionType | updateDirectionsActionType | addDotActionType | addDiectionActionType
+| removeDotActionType | reOrder | setCenterActionType | removeDirectionActionType
+
+type changeCoordsFromMapActionType = {
+    type: typeof CHANGE_DRAGGABLE_MAP_DOT,
+    payload: {
+        lat: number,
+        lng: number,
+        id: number
+    }
+}
+
+export const changeCoordsFromMap = (lat: number, lng: number, id: number): changeCoordsFromMapActionType => {
     return {
         type: CHANGE_DRAGGABLE_MAP_DOT,
         payload: {lat, lng, id}
     }
 };
 
-export const updateDirections = () => {
+type updateDirectionsActionType = {
+    type: typeof UPDATE_DIRECTIONS
+};
+
+export const updateDirections = (): updateDirectionsActionType => {
     return {
         type: UPDATE_DIRECTIONS
     }
 };
 
-export const addDot = (lat, lng, address) => {
+type addDotActionType = {
+    type: typeof ADD_DOT,
+    payload: {
+        lat: number,
+        lng:number,
+        address: string
+    }
+};
+
+export const addDot = (lat: number, lng: number, address: string): addDotActionType => {
     return {
         type: ADD_DOT,
         payload: {lat, lng, address}
     }
 };
 
-export const addDirection = (lat, lng) => {
+type addDiectionActionType = {
+    type: typeof ADD_DIRECTION,
+    payload: {
+        lat: number,
+        lng: number
+    }
+}
+
+export const addDirection = (lat: number, lng: number): addDiectionActionType => {
     return {
         type: ADD_DIRECTION,
         payload: {lat, lng}
     }
 };
 
-export const removeDot = (id) => {
+type removeDotActionType = {
+    type: typeof REMOVE_DOT,
+    payload: {id: number}
+};
+
+export const removeDot = (id: number): removeDotActionType => {
     return {
         type: REMOVE_DOT,
         payload: {id}
     }
 };
 
-export const removeDirection = (id) => {
+type removeDirectionActionType = {
+    type: typeof REMOVE_DIRECTION,
+    payload: number
+}
+
+export const removeDirection = (id: number): removeDirectionActionType => {
     return {
         type: REMOVE_DIRECTION,
         payload: id
     }
 };
 
-export const reOrder = (destination, source) => {
+type reOrder = {
+    type: typeof REORDER_LIST,
+    payload: {
+        destination: number,
+        source: number
+    }
+}
+
+export const reOrder = (destination: number, source: number):reOrder => {
     return {
         type: REORDER_LIST,
         payload: {destination, source}
     }
 };
 
-export const setCenter = (lat, lng) => {
+type setCenterActionType = {
+    type: typeof SET_CENTER,
+    payload: {
+        lat: number,
+        lng:number
+    }
+}
+
+export const setCenter = (lat: number, lng: number): setCenterActionType => {
     return {
         type: SET_CENTER,
-        payload: {lat, lng}
+        payload: {
+            lat,
+            lng
+        }
     }
 };
 
-export const addDotTC = (lat, lng, address) => {
-    return (dispatch) => {
+export const addDotTC = (lat: number, lng: number, address: string) => {
+    return (dispatch: Dispatch<ActionsType>) => {
         dispatch(addDot(lat, lng, address));
         dispatch(addDirection(lat, lng));
     }
 };
 
-export const changeCoordsFromMapTC = (lat, lng, id) => {
-    return (dispatch) => {
+export const changeCoordsFromMapTC = (lat: number, lng: number, id: number) => {
+    return (dispatch: Dispatch<ActionsType>) => {
         let promise = dispatch(changeCoordsFromMap(lat, lng, id));
         Promise.all([promise])
             .then(() => {
@@ -184,15 +245,14 @@ export const changeCoordsFromMapTC = (lat, lng, id) => {
     }
 };
 
-export const removeDotTC = (id) => {
-    return (dispatch) => {
+export const removeDotTC = (id: number) => {
+    return (dispatch: Dispatch<ActionsType>) => {
         dispatch(removeDot(id));
         dispatch(removeDirection(id));
     }
 };
-export const reOrderTC = (destination, source) => {
-    debugger
-    return (dispatch) => {
+export const reOrderTC = (destination: number, source: number) => {
+    return (dispatch: Dispatch<ActionsType>) => {
         let promise = dispatch(reOrder(destination, source));
         Promise.all([promise])
             .then(() => {

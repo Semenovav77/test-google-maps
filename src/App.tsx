@@ -7,8 +7,8 @@ import {GoogleApiWrapper} from './containers';
 const App = () => {
     return (
         <div className='container'>
-                <PanelContainer/>
-                <GoogleApiWrapper/>
+            <PanelContainer/>
+            <GoogleApiWrapper/>
         </div>
     );
 };
