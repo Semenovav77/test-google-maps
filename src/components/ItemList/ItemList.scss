@@ -22,11 +22,10 @@
     white-space: nowrap;
   };
   &__right {
-    margin-right: 15px;
-    cursor: pointer;
+    margin-right: 13px;
+    cursor: url('./../../assets/pointing.svg'), pointer;
     svg {
-      margin-top: 4px;
-      margin-right: -3px;
+      padding-top: 3px;
       &:hover {
         stroke: #000000;
       }
